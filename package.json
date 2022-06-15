@@ -1,0 +1,15 @@
+{
+  "name": "carbon_it",
+  "version": "1.0.0",
+  "description": "treasure hunt",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "author": "Chaomans",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^28.1.1"
+  }
+}
