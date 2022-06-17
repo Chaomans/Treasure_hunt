@@ -1,16 +1,16 @@
 const SEP = ' - ';
 
-function createMap(content, adventurers) {
+function createMap(lines, adventurers) {
     return {
-        size: getSize(getMapLine(content)),
-        treasures: getTreasures(getTreasuresLines(content)),
-        mountains: getMountains(getMountainsLines(content)),
+        size: getSize(getMapLine(lines)),
+        treasures: getTreasures(getTreasuresLines(lines)),
+        mountains: getMountains(getMountainsLines(lines)),
         adventurers
     }
 }
 
 function getMapLine(lines) {
-    return lines.filter(line => line.startsWith('C'));
+    return lines.filter(line => line.startsWith('C'))[0];
 }
 
 function getMountainsLines(lines) {
@@ -34,9 +34,9 @@ function getMountains(lines) {
 
 function getTreasures(lines) {
     return lines.map(t => ({
-        x: Number(m.split(SEP)[1]),
-        y: Number(m.split(SEP)[2]),
-        n: Number(m.split(SEP)[3])
+        x: Number(t.split(SEP)[1]),
+        y: Number(t.split(SEP)[2]),
+        n: Number(t.split(SEP)[3])
     }))
 }
 
@@ -45,16 +45,30 @@ function isTreasure(map, pos) {
 }
 
 function removeTreasure(map, pos) {
-    map.treasures.foreach(t => {
-        if (t.x === pos.x && t.y === pos.y) {
-            t.n === t.n - 1;
+    map.treasures.forEach(t => {
+        if (t.x === pos.x && t.y === pos.y && t.n > 0) {
+            t.n = t.n - 1;
         }
     });
-    map.treasures = map.treasures.filter(t => t.n != 0);
+    map.treasures = map.treasures.filter(t => t.n > 0);
 }
 
 function isMountain(map, pos) {
     return map.mountains.some(m => m.x === pos.x && m.y === pos.y);
+}
+
+function isAdventurer(map, pos) {
+    return map.adventurers.some(a => a.position.x === pos.x && a.position.y === pos.y);
+}
+
+function isOut(map, pos) {
+    return map.size.x <= pos.x
+        || map.size.y <= pos.y
+        || [pos.x, pos.y].some(x => x < 0);
+}
+
+function canMove(map, destination) {
+    return !(isMountain(map, destination) || isAdventurer(map, destination) || isOut(map, destination))
 }
 
 module.exports = {
@@ -67,5 +81,8 @@ module.exports = {
     getTreasures,
     isTreasure,
     removeTreasure,
-    isMountain
+    isMountain,
+    isOut,
+    canMove,
+    isAdventurer
 }

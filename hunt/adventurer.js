@@ -1,8 +1,10 @@
+const { canMove } = require("./map");
+
 const SEP = ' - ';
 const ORIENTATIONS = ['N', 'E', 'S', 'O'];
 
 function getAdventurers(lines) {
-    return lines.map(line => ({
+    return getAdventurersLines(lines).map(line => ({
         name: getName(line),
         position: getPosition(line),
         orientation: getOrientation(line),
@@ -13,7 +15,7 @@ function getAdventurers(lines) {
 }
 
 function getName(line) {
-    return line.split(SEP)[1]
+    return line.split(SEP)[1];
 }
 
 function getPosition(line) {
@@ -25,7 +27,7 @@ function getOrientation(line) {
 }
 
 function getActions(line) {
-    return line.split(SEP)[-1]
+    return line.split(SEP)[5]
 }
 
 function getAdventurersLines(lines) {
@@ -54,9 +56,20 @@ function getDestination(adventurer) {
                 x: adventurer.position.x - 1,
                 y: adventurer.position.y
             }
-        default:
-            return null;
     }
+}
+
+function getActionType(action) {
+    return action === 'A' ? Types.MOVE : Types.TURN;
+}
+
+function getNextAction(adventurer) {
+    return adventurer.actions[adventurer.nextAction];
+}
+
+const Types = {
+    MOVE: 'move',
+    TURN: 'turn'
 }
 
 function move(adventurer) {
@@ -73,26 +86,28 @@ function move(adventurer) {
         case ORIENTATIONS[3]: // O
             adventurer.position.x = adventurer.position.x - 1;
             break;
-        default:
-            break;
     }
 }
 
 function turn(adventurer, direction) {
     switch (direction) {
         case 'D':
-            adventurer.orientation = ORIENTATIONS[ORIENTATIONS.findIndex(adventurer.orientation) + 1 % 4];
+            adventurer.orientation = ORIENTATIONS[(ORIENTATIONS.findIndex(x => x === adventurer.orientation) + 1) % ORIENTATIONS.length];
             break;
         case 'G':
-            adventurer.orientation = ORIENTATIONS[ORIENTATIONS.findIndex(adventurer.orientation) + 3 % 4];
-            break;
-        default:
+            adventurer.orientation = ORIENTATIONS[(ORIENTATIONS.findIndex(x => x === adventurer.orientation) + 3) % ORIENTATIONS.length];
             break;
     }
 }
 
 function addTreasure(adventurer) {
     adventurer.treasures = adventurer.treasures + 1;
+}
+
+function setNextAction(adventurer) {
+    adventurer.nextAction = adventurer.nextAction === adventurer.actions.length - 1
+        ? adventurer.nextAction = - 1
+        : adventurer.nextAction = adventurer.nextAction + 1
 }
 
 module.exports = {
@@ -105,5 +120,9 @@ module.exports = {
     getDestination,
     move,
     turn,
-    addTreasure
+    addTreasure,
+    getActionType,
+    getNextAction,
+    setNextAction,
+    Types
 };
