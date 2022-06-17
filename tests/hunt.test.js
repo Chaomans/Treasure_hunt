@@ -1,5 +1,6 @@
 const H = require('../hunt/hunt');
 const { clone } = require('../utils');
+const { existsSync, unlinkSync } = require('fs');
 
 const A1 = {
     name: 'Lara',
@@ -83,4 +84,21 @@ test('Do all actions', () => {
     expect(Nima.position).toEqual({ x: 0, y: 3 });
     expect(Nima.treasures).toBe(1);
     expect(Nima.nextAction).toBe(-1);
+})
+
+const RES_TEST_FILE = [
+    'C - 3 - 4',
+    'M - 1 - 0',
+    'M - 2 - 1',
+    'T - 1 - 3 - 2',
+    'A - Lara - 0 - 3 - S - 3'
+]
+
+test('Run all the process', () => {
+    const res = 'end_map.txt';
+    if (existsSync(res)) {
+        unlinkSync(res);
+    }
+    H.startHunt('testfile.txt');
+    expect(existsSync(res)).toBe(true);
 })

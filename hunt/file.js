@@ -50,10 +50,10 @@ function isFileCorrect(lines) {
     }
 }
 
+const RESULT_FILE = 'end_map.txt';
 function writeFile(lines) {
-    const fileName = 'end_map.txt';
-    writeFileSync(fileName, lines.join("\n"));
-    console.log(`${fileName} written !`)
+    writeFileSync(RESULT_FILE, lines.join("\n"));
+    console.log(`${RESULT_FILE} written !`)
 }
 
 const SEP = ' - ';
@@ -70,7 +70,7 @@ function prepareAdventurersLines(adventurers) {
 }
 
 function prepareMapLine(size) {
-    return [`C - ${size.x} - ${size.y}`];
+    return `C - ${size.x} - ${size.y}`;
 }
 
 function prepareMountainsLines(mountains) {
@@ -83,7 +83,7 @@ function prepareMountainsLines(mountains) {
 
 function prepareTreasuresLines(treasures) {
     return treasures.map(t => _.join([
-        'M',
+        'T',
         t.x,
         t.y,
         t.n
@@ -107,6 +107,7 @@ module.exports = {
     isLineValid,
     getRe,
     Re,
+    RESULT_FILE,
     prepareAdventurersLines,
     prepareMapLine,
     prepareMountainsLines,

@@ -1,5 +1,6 @@
 const { clone } = require('../utils');
 const M = require('../hunt/map');
+const { writeFile } = require('../hunt/file');
 
 const LINES = [
     'C​ - 3 - 4 ',
@@ -62,7 +63,6 @@ const MAP = {
     treasures: [
         { x: 0, y: 3, n: 2 },
         { x: 1, y: 3, n: 3 },
-        { x: 1, y: 0, n: 0 }
     ],
     mountains: [{ x: 1, y: 0 }, { x: 2, y: 1 }],
     adventurers: [Lara]
@@ -113,7 +113,6 @@ const LINES_2 = [
     'M​ - 2 - 1 ',
     'T​ - 0 - 3 - 2 ',
     'T​ - 1 - 3 - 3 ',
-    'T​ - 1 - 0 - 0 ',
 ];
 
 test('Create map', () => {
